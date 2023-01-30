@@ -39,9 +39,9 @@ jobs:
       with:
         context: .
         tags: |
-          ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_STAGER }}:${{ env.DOCKER_IMAGE_STAGER }}
-          ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_WORKER }}:${{ env.DOCKER_IMAGE_WORKER }}
+          public.ecr.aws/z4w2w9k3/${{ env.ECR_REPOSITORY_STAGER }}:${{ env.DOCKER_IMAGE_STAGER }}
+          public.ecr.aws/z4w2w9k3/${{ env.ECR_REPOSITORY_WORKER }}:${{ env.DOCKER_IMAGE_WORKER }}
         push: true
-        Dockerfile: |
+        dockerfile: |
           Dockerfile.starter
           Dockerfile.worker
