@@ -44,10 +44,7 @@ jobs:
         push: true
         tags: ${{ env.ECR_REGISTRY }}/worker-repo:${{ env.GITHUB_SHA }}
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
+
     - name: Apply Kubernetes Deployment for Starter
       uses: pulumi/actions/kubectl@v1
       with:
