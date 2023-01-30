@@ -42,6 +42,6 @@ jobs:
           ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_STAGER }}:${{ env.DOCKER_IMAGE_STAGER }}
           ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_WORKER }}:${{ env.DOCKER_IMAGE_WORKER }}
         push: true
-        dockerfile: |
+        Dockerfile: |
           Dockerfile.starter
           Dockerfile.worker
