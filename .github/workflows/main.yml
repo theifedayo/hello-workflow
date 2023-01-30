@@ -25,7 +25,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: worker
-        tags: public.ecr.aws/z4w2w9k3/starter-repo/hello-worker:${{ env.GITHUB_SHA }}
+        tags: worker-repo/hello-worker:${{ env.GITHUB_SHA }}
         push: true
 
   build-starter:
@@ -44,7 +44,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: starter
-        tags: $(aws ecr describe-repositories --repository-name starter-repo --region ${{ env.AWS_REGION }} --query "repositories[].repositoryUri" --output text)/hello-starter:${{ env.GITHUB_SHA }}
+        tags: starter-repo/hello-starter:${{ env.GITHUB_SHA }}
         push: true
 
   deploy:
