@@ -49,14 +49,14 @@ jobs:
       with:
         args: apply -f deployments/starter-deployment.yml
         env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
     
     - name: Apply Kubernetes Deployment for Worker
       uses: pulumi/actions/kubectl@v1
       with:
         args: apply -f deployments/worker-deployment.yml
         env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
 
     - name: Update image in deployments.yml
       run: |
