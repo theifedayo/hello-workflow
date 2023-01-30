@@ -34,14 +34,32 @@ jobs:
       with:
         region: ${{ env.AWS_REGION }}
 
-    - name: Build Docker image
+    - name: Build starter image
       uses: docker/build-push-action@v2
       with:
         context: .
-        tags: |
-          public.ecr.aws/z4w2w9k3/${{ env.ECR_REPOSITORY_STAGER }}:${{ env.DOCKER_IMAGE_STAGER }}
-          public.ecr.aws/z4w2w9k3/${{ env.ECR_REPOSITORY_WORKER }}:${{ env.DOCKER_IMAGE_WORKER }}
         push: true
-        dockerfile: |
-          Dockerfile.starter
-          Dockerfile.worker
+        tags: hello-starter
+
+    - name: Push starter image to Amazon ECR
+      uses: aws-actions/amazon-ecr-push@v1
+      with:
+        tags: hello-starter
+        repository-url: public.ecr.aws/z4w2w9k3/starter-repo
+      env:
+        AWS_REGISTRY_AUTH: ${{ steps.login-ecr.outputs.registry-auth }}
+
+    - name: Build worker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: hello-worker
+
+    - name: Push worker image to Amazon ECR
+      uses: aws-actions/amazon-ecr-push@v1
+      with:
+        tags: hello-worker
+        repository-url: public.ecr.aws/z4w2w9k3/worker-repo
+      env:
+        AWS_REGISTRY_AUTH: ${{ steps.login-ecr.outputs.registry-auth }}
