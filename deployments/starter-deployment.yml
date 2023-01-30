@@ -14,11 +14,10 @@ spec:
     spec:
       containers:
         - name: starter
-          image: 344299758316.dkr.ecr.us-east-1.amazonaws.com/starter-repo:latest
+          image: 344299758316.dkr.ecr.us-east-1.amazonaws.com/starter-repo:{{ env.IMAGE_TAG }}
+          imagePullPolicy: Alwayslatest
           ports:
             - containerPort: 3030
-
-
 ---
 apiVersion: v1
 kind: Service

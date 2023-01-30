@@ -6,6 +6,9 @@ on:
       - main
 
 env:
+  K8S_NAMESPACE: default
+  K8S_DEPLOYMENT_START: starter-deployment
+  K8S_DEPLOYMENT_WORKER: worker-deployment
   ECR_REGISTRY: 344299758316.dkr.ecr.us-east-1.amazonaws.com
 
 jobs:
@@ -19,8 +22,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: AKIAVAKO5MLWOPQZQ6HW
-        aws-secret-access-key: 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
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
     - name: Login to Amazon ECR
@@ -32,25 +35,34 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ env.ECR_REGISTRY }}/starter-repo:latest
+        tags: ${{ env.ECR_REGISTRY }}/starter-repo:${{ env.GITHUB_SHA }}
 
     - name: Build worker image
       uses: docker/build-push-action@v2
       with:
         context: .
         push: true
-        tags: ${{ env.ECR_REGISTRY }}/worker-repo:latest
+        tags: ${{ env.ECR_REGISTRY }}/worker-repo:${{ env.GITHUB_SHA }}
 
-    # - name: Apply worker deployment
-    #   uses: actions/kubectl@v1
-    #   env:
-    #     KUBECONFIG: /github/home/.kube/config
-    #   with:
-    #     args: set image deployment/worker-deployment worker=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}/worker-repo:${{ env.GITHUB_SHA }}
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Apply Kubernetes Deployment for Starter
+      uses: pulumi/actions/kubectl@v1
+      with:
+        args: apply -f deployments/starter-deployment.yml
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    
+    - name: Apply Kubernetes Deployment for Worker
+      uses: pulumi/actions/kubectl@v1
+      with:
+        args: apply -f deployments/worker-deployment.yml
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
-    # - name: Apply starter deployment
-    #   uses: actions/kubectl@v1
-    #   env:
-    #     KUBECONFIG: /github/home/.kube/config
-    #   with:
-    #     args: set image deployment/starter-deployment starter=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}/starter-repo:${{ env.GITHUB_SHA }}
+    - name: Update image in deployments.yml
+      run: |
+        kubectl set image deployment/starter starter=${{ env.ECR_REGISTRY }}/starter-repo:${{ env.GITHUB_SHA }}
+        kubectl set image deployment/worker worker=${{ env.ECR_REGISTRY }}/worker-repo:${{ env.GITHUB_SHA }}

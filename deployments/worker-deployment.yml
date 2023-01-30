@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: worker
-          image: 344299758316.dkr.ecr.us-east-1.amazonaws.com/worker-repo:latest
+          image: 344299758316.dkr.ecr.us-east-1.amazonaws.com/worker-repo:{{ env.IMAGE_TAG }}
+          imagePullPolicy: Alwayslatest
           ports:
             - containerPort: 2020
 ---
