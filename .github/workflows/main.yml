@@ -1,7 +1,10 @@
-name: CI/CD
+name: Hello-Workflow-CI/CD
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -13,14 +16,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - na
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: latest
 
     - name: Build Docker Image
       uses: docker/build-push-action@v2
       with:
         context: .
         push: true
-        tags: myapp:${{ env.GITHUB_SHA }}
+        tags: hello-workflow:${{ env.GITHUB_SHA }}
 
     - name: Deploy to Temporal
       uses: actions/aws-cli@v2
