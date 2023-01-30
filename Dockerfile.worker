@@ -6,7 +6,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o hello-worker ./worker
+RUN go build -o hello-worker ./src/worker
 
 EXPOSE 2020
 

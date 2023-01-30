@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/wafi/hello-workflow/helloworkflow"
+	"github.com/wafi/hello-workflow/src/helloworkflow"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
 )

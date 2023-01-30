@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/wafi/hello-workflow/helloworkflow"
+	"github.com/wafi/hello-workflow/src/helloworkflow"
 	"go.temporal.io/sdk/client"
 )
 
