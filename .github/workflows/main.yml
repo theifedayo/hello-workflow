@@ -25,7 +25,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: worker
-        tags: worker-repo/hello-worker:${{ env.GITHUB_SHA }}
+        tags: worker-repo/hello-worker:latest
         push: true
 
   build-starter:
@@ -44,7 +44,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: starter
-        tags: starter-repo/hello-starter:${{ env.GITHUB_SHA }}
+        tags: starter-repo/hello-starter:latest
         push: true
 
   deploy:
