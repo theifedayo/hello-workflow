@@ -16,11 +16,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Install AWS CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install awscli
+
     - name: Build and push Worker Docker image
       uses: docker/build-push-action@v2
       with:
         context: worker
-        tags: $(aws ecr describe-repositories --repository-name worker-repo --region ${{ env.AWS_REGION }} --query "repositories[].repositoryUri" --output text)/worker-image:${{ env.GITHUB_SHA }}
+        tags: $(aws ecr describe-repositories --repository-name worker-repo --region ${{ env.AWS_REGION }} --query "repositories[].repositoryUri" --output text)/hello-worker:${{ env.GITHUB_SHA }}
         push: true
 
   build-starter:
@@ -34,7 +39,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: starter
-        tags: $(aws ecr describe-repositories --repository-name starter-repo --region ${{ env.AWS_REGION }} --query "repositories[].repositoryUri" --output text)/starter-image:${{ env.GITHUB_SHA }}
+        tags: $(aws ecr describe-repositories --repository-name starter-repo --region ${{ env.AWS_REGION }} --query "repositories[].repositoryUri" --output text)/hello-starter:${{ env.GITHUB_SHA }}
         push: true
 
   deploy:
