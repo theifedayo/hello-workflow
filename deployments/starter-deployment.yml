@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starter-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: starter
+  template:
+    metadata:
+      labels:
+        app: starter
+    spec:
+      containers:
+        - name: starter
+          image: hello-starter:latest
+          ports:
+            - containerPort: 3030
