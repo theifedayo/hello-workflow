@@ -1,4 +1,4 @@
-name: Deployment Update
+name: Deploy to EKS
 
 on:
   push:
@@ -6,56 +6,50 @@ on:
       - main
 
 env:
-  AWS_REGION: us-west-2
+  ECR_REGISTRY: public.ecr.aws
+  ECR_REPOSITORY: z4w2w9k3
 
 jobs:
-  build-worker:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Build and push Worker Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: worker
-        tags: worker-repo/hello-worker:${{ env.GITHUB_SHA }}
-        push: true
-
-  build-starter:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Build and push Starter Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: starter
-        tags: starter-repo/hello-starter:${{ env.GITHUB_SHA }}
-        push: true
-
   deploy:
     runs-on: ubuntu-latest
-    needs: [build-worker, build-starter]
-    if: success()
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: AKIAVAKO5MLWOPQZQ6HW
         aws-secret-access-key: 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
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: us-west-2
 
-    - name: Apply Worker deployment
-      uses: kubernetes-actions/kubectl@v1
-      with:
-        args: set image deployment/worker worker=worker-repo/hello-worker:${{ env.GITHUB_SHA }}
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Apply Starter deployment
-      uses: kubernetes-actions/kubectl@v1
+    - name: Build starter image
+      uses: docker/build-push-action@v2
       with:
-        args: set image deployment/starter starter=starter-repo/hello-starter:${{ env.GITHUB_SHA }}
+        context: starter
+        tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}/starter-repo:${{ env.GITHUB_SHA }}
+
+    - name: Build worker image
+      uses: docker/build-push-action@v2
+      with:
+        context: worker
+        tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}/worker-repo:${{ env.GITHUB_SHA }}
+
+    - name: Apply worker deployment
+      uses: actions/kubectl@v1
+      env:
+        KUBECONFIG: /github/home/.kube/config
+      with:
+        args: set image deployment/worker-deployment worker=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}/worker-repo:${{ env.GITHUB_SHA }}
+
+    - name: Apply starter deployment
+      uses: actions/kubectl@v1
+      env:
+        KUBECONFIG: /github/home/.kube/config
+      with:
+        args: set image deployment/starter-deployment starter=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}/starter-repo:${{ env.GITHUB_SHA }}
