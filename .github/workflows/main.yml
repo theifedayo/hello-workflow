@@ -1,0 +1,31 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - na
+
+    - name: Build Docker Image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: myapp:${{ env.GITHUB_SHA }}
+
+    - name: Deploy to Temporal
+      uses: actions/aws-cli@v2
+      with:
+        args: deploy
+        command: temporal
+        env:
+          AWS_REGION: us-west-2
