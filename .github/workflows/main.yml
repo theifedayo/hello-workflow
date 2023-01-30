@@ -24,7 +24,7 @@ jobs:
     - name: Build and push Worker Docker image
       uses: docker/build-push-action@v2
       with:
-        context: worker
+        context: .
         tags: worker-repo/hello-worker:latest
         push: true
 
@@ -43,7 +43,7 @@ jobs:
     - name: Build and push Starter Docker image
       uses: docker/build-push-action@v2
       with:
-        context: starter
+        context: .
         tags: starter-repo/hello-starter:latest
         push: true
 
