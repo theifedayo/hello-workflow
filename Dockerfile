@@ -19,8 +19,8 @@ COPY . .
 RUN go build -o hello-worker ./src/worker
 
 FROM alpine:latest as final
-COPY --from=worker /src/worker /app/worker/
-COPY --from=starter /src/starter /app/starter/
+COPY --from=worker /app/worker /app/worker/
+COPY --from=starter /app/starter /app/starter/
 
 
 EXPOSE 3030
