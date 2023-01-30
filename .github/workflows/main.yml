@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: CI/CD
 
 on:
   push:
@@ -7,52 +7,20 @@ on:
 
 env:
   AWS_REGION: us-west-2
+  AWS_ACCOUNT_ID: 344299758316
+  DOCKER_IMAGE_STAGER: hello-starter
+  DOCKER_IMAGE_WORKER: hello-worker
+  ECR_REPOSITORY_STAGER: starter-repo
+  ECR_REPOSITORY_WORKER: worker-repo
 
 jobs:
-  build-worker:
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install AWS CLI
-      run: |
-        sudo apt-get update
-        sudo apt-get install awscli
-
-    - name: Build and push Worker Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        tags: worker-repo/hello-worker:latest
-        push: true
-
-  build-starter:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Install AWS CLI
-      run: |
-        sudo apt-get update
-        sudo apt-get install awscli
-
-    - name: Build and push Starter Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        tags: starter-repo/hello-starter:latest
-        push: true
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [build-worker, build-starter]
-    if: success()
-
-    steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -60,12 +28,20 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Apply Worker deployment
-      uses: kubernetes-actions/kubectl@v1
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
       with:
-        args: set image deployment/worker worker=worker-repo/worker-image:${{ env.GITHUB_SHA }}
+        region: ${{ env.AWS_REGION }}
 
-    - name: Apply Starter deployment
-      uses: kubernetes-actions/kubectl@v1
+    - name: Build Docker image
+      uses: docker/build-push-action@v2
       with:
-        args: set image deployment/starter starter=starter-repo/starter-image:${{ env.GITHUB_SHA }}
+        context: .
+        tags: |
+          ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_STAGER }}:${{ env.DOCKER_IMAGE_STAGER }}
+          ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_WORKER }}:${{ env.DOCKER_IMAGE_WORKER }}
+        push: true
+        dockerfile: |
+          Dockerfile.starter
+          Dockerfile.worker
