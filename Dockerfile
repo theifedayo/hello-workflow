@@ -29,5 +29,5 @@ EXPOSE 3030
 
 EXPOSE 2020
 
-CMD ["./hello-worker", "./hello-worker"]
+CMD ["./hello-starter", "./hello-worker"]
 

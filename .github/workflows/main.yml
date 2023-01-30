@@ -31,17 +31,15 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        push: false
+        push: true
         tags: ${{ env.ECR_REGISTRY }}/starter-repo:latest
-        dockerfile: Dockerfile.starter
 
     - name: Build worker image
       uses: docker/build-push-action@v2
       with:
         context: .
-        push: false
+        push: true
         tags: ${{ env.ECR_REGISTRY }}/worker-repo:latest
-        dockerfile: Dockerfile.worker
 
     # - name: Apply worker deployment
     #   uses: actions/kubectl@v1
