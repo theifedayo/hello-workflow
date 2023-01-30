@@ -26,12 +26,13 @@ jobs:
       with:
         context: .
         push: true
-        tags: hello-workflow:${{ env.GITHUB_SHA }}
+        tags: hello-workflow:latest
+        #${{ env.GITHUB_SHA }}
 
-    - name: Deploy to Temporal
-      uses: actions/aws-cli@v2
-      with:
-        args: deploy
-        command: temporal
-        env:
-          AWS_REGION: us-west-2
+    # - name: Deploy to Temporal
+    #   uses: actions/aws-cli@v2
+    #   with:
+    #     args: deploy
+    #     command: temporal
+    #     env:
+    #       AWS_REGION: us-west-2
