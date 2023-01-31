@@ -1,8 +1,18 @@
 version: '3'
+
 services:
-  app:
-    build:
-      context: .
+  temporal-server:
+    image: temporalio/server:latest
     ports:
-      - "3030:3030"
-    command: ["./hello-workflow"]
+      - 7231:7233
+      - 7230:7234
+
+  starter:
+    image: hello-starter
+    ports:
+      - 3030:3030
+
+  worker:
+    image: hello-worker
+    ports:
+      - 2020:2020

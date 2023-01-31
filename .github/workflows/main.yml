@@ -44,21 +44,21 @@ jobs:
         push: true
         tags: ${{ env.ECR_REGISTRY }}/worker-repo:${{ env.GITHUB_SHA }}
 
-    - name: Apply Kubernetes Deployment for Starter
-      uses: pulumi/actions/kubectl@v1
-      with:
-        args: apply -f deployments/starter-deployment.yml
-        env:
-          KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
+    # - name: Apply Kubernetes Deployment for Starter
+    #   uses: pulumi/actions/kubectl@v1
+    #   with:
+    #     args: apply -f deployments/starter-deployment.yml
+    #     env:
+    #       KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
     
-    - name: Apply Kubernetes Deployment for Worker
-      uses: pulumi/actions/kubectl@v1
-      with:
-        args: apply -f deployments/worker-deployment.yml
-        env:
-          KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
+    # - name: Apply Kubernetes Deployment for Worker
+    #   uses: pulumi/actions/kubectl@v1
+    #   with:
+    #     args: apply -f deployments/worker-deployment.yml
+    #     env:
+    #       KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
 
-    - name: Update image in deployments.yml
-      run: |
-        kubectl set image deployment/starter starter=${{ env.ECR_REGISTRY }}/starter-repo:${{ env.GITHUB_SHA }}
-        kubectl set image deployment/worker worker=${{ env.ECR_REGISTRY }}/worker-repo:${{ env.GITHUB_SHA }}
+    # - name: Update image in deployments.yml
+    #   run: |
+    #     kubectl set image deployment/starter starter=${{ env.ECR_REGISTRY }}/starter-repo:${{ env.GITHUB_SHA }}
+    #     kubectl set image deployment/worker worker=${{ env.ECR_REGISTRY }}/worker-repo:${{ env.GITHUB_SHA }}
