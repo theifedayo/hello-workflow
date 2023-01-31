@@ -35,14 +35,14 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ env.ECR_REGISTRY }}/starter-repo:${{ env.GITHUB_SHA }}
+        tags: ${{ env.ECR_REGISTRY }}/starter-repo:latest
 
     - name: Build worker image
       uses: docker/build-push-action@v2
       with:
         context: .
         push: true
-        tags: ${{ env.ECR_REGISTRY }}/worker-repo:${{ env.GITHUB_SHA }}
+        tags: ${{ env.ECR_REGISTRY }}/worker-repo:latest
 
     # - name: Apply Kubernetes Deployment for Starter
     #   uses: pulumi/actions/kubectl@v1
