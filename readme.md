@@ -21,7 +21,7 @@ How would you improve this app - First would be restructuring the folders, every
 I would also want to have the temporal-server as light weight without having to bring in postgresql, cassandra and the likes except they're needed.
 
 Here's a screenshot running on a local kubernetes cluster as pods
-<img width="840" alt="Screenshot 2023-02-06 at 00 34 44" src="https://user-images.githubusercontent.com/47679952/216852408-3ecb4040-0353-4355-a2c2-d760ab4aa939.png">
-
-<img width="840" alt="Screenshot 2023-02-06 at 00 42 27" src="https://user-images.githubusercontent.com/47679952/216852731-fa5a5b47-d553-4928-bc14-5e3f9d5e1166.png">
-
+<div>
+    <img width="840" alt="Screenshot 2023-02-06 at 00 34 44" src="https://user-images.githubusercontent.com/47679952/216852408-3ecb4040-0353-4355-a2c2-d760ab4aa939.png">
+    <img width="840" alt="Screenshot 2023-02-06 at 00 42 27" src="https://user-images.githubusercontent.com/47679952/216852731-fa5a5b47-d553-4928-bc14-5e3f9d5e1166.png">
+</div>
