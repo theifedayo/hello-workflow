@@ -1,7 +1,7 @@
 ### hello-workflow
 
 Deploy a temporal cluster for production - 
-For my 48 hrs of assessment, the hello-workflow was deployed to Amazon EKS, however now my account has been suspended cause they couldn't charge it with my master card, therefore I was unable to get the url.
+For my 48 hrs of this assessment, the hello-workflow was deployed to Amazon EKS, however now my account has been suspended cause they couldn't charge it with my master card, therefore I was unable to get the url.
 Here are the steps I followed:
 - I created an AWS account
 - I created an Amazon ECR to push my docker images to
@@ -11,11 +11,25 @@ Here are the steps I followed:
 - I didn't use any load balancer in this assessment cause I wasn't planning to scale the pods and share the requests.
 
 
-Package this temporal app as a docker image - The starter and worker app has been packaged as image in the Dockerfile
+Package this temporal app as a docker image - The starter and worker app has been packaged as image in the Dockerfile. 
+```bash
+docker-compose up
+```
+can be used to start the server
+and 
+```bash
+go run ./src/worker/main.go
+```
+to manually start the worker
+```bash
+go run .src/starter/main.go
+```
+to manually execute the workflow.
+
 
 write a CICD for the app - the CI/CD pipeline file is in.github/workflows/main.yml, the jobs in the file are triggered once there is a push or pull request to the main branch. The jobs builds the starter and worker as two separate images and pushes them to Amazon ECR and the deployment job applies the files in deployments folder which also has the image of starter and worker to the pods in the kubernetes cluster for any change.
 
-deploy the app using Kubernetes - The app is deployed using kubernetes and the help of helm-charts[https://github.com/temporalio/helm-charts], and following the readme file for helm-charts, my PC port was forwarded to temporal-web ui and temporal frontend, then access it on localhost:8080
+deploy the app using Kubernetes - The app is deployed using kubernetes and the help of [helm-charts](https://github.com/temporalio/helm-charts), and following the readme file for helm-charts, my PC port was forwarded to temporal-web ui and temporal frontend, then access it on localhost:8080
 
 How would you improve this app - First would be restructuring the folders, everything seem a little bit clumsy and everywhere.
 I would also want to have the temporal-server as light weight without having to bring in postgresql, cassandra and the likes except they're needed.
