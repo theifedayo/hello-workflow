@@ -60,5 +60,5 @@ jobs:
 
     # - name: Update image in deployments.yml
     #   run: |
-    #     kubectl set image deployment/starter starter=${{ env.ECR_REGISTRY }}/starter-repo:${{ env.GITHUB_SHA }}
-    #     kubectl set image deployment/worker worker=${{ env.ECR_REGISTRY }}/worker-repo:${{ env.GITHUB_SHA }}
+    #     kubectl set image deployment/starter starter=${{ env.ECR_REGISTRY }}/starter-repo:latest
+    #     kubectl set image deployment/worker worker=${{ env.ECR_REGISTRY }}/worker-repo:latest

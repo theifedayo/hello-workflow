@@ -9,9 +9,7 @@ RUN go mod download
 COPY . .
 RUN go build -o hello-starter ./src/starter 
 
-EXPOSE 3030
-
-CMD ["./hello-starter"]
+CMD ["sh", "-c", "sleep 12 && ./hello-starter"]
 
 # Build worker image
 FROM golang:alpine as worker
@@ -24,9 +22,8 @@ RUN go mod download
 COPY . .
 RUN go build -o hello-worker ./src/worker
 
-EXPOSE 2020
 
-CMD ["./hello-worker"]
+CMD ["sh", "-c", "sleep 17 && ./hello-worker"]
 
 
 # Package final images

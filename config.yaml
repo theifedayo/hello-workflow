@@ -1,0 +1,27 @@
+server:
+  address: "0.0.0.0:7233"
+  cluster:
+    host_info_file: /etc/temporal/host_info
+  database:
+    schema_dir: /etc/temporal/schema
+    datastore:
+      type: mysql
+      connection_string: "root:password@tcp(127.0.0.1:3306)/temporal?charset=utf8&parseTime=True&loc=Local"
+      enable_schema_updates: true
+  logs:
+    level: info
+    directory: /var/log/temporal
+  features:
+    history:
+      enabled: true
+  persistence:
+    visibility_open_max_qps: 1000
+    visibility_closed_max_qps: 1000
+    visibility_op_max_qps: 1000
+  replication:
+    active_cluster_name: default
+  client:
+    tls:
+      cert_file: /etc/temporal/tls/cert.pem
+      key_file: /etc/temporal/tls/key.pem
+      root_file: /etc/temporal/tls/root.pem
